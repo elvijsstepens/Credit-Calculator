@@ -1,42 +1,8 @@
-{% extends "layout.html" %}
+{% extends 'layout.html' %}
 
 {% block content %}
-    <h1>Mortgage Loan Calculator</h1>
-    <form action="/calculate" method="POST">
-        <div class="form-group">
-            <label for="income">Net Monthly Income:</label>
-            <input type="number" class="form-control" id="income" name="income" required>
-        </div>
-        <div class="form-group">
-            <label for="current_loans">Current Loans:</label>
-            <input type="number" class="form-control" id="current_loans" name="current_loans" required>
-        </div>
-        <div class="form-group">
-            <label for="monthly_payments">Monthly Payments:</label>
-            <input type="number" class="form-control" id="monthly_payments" name="monthly_payments" required>
-        </div>
-        <div class="form-group">
-            <label for="interest_rate">Bank Interest Rate (%):</label>
-            <input type="number" class="form-control" id="interest_rate" name="interest_rate" step="0.01" required>
-        </div>
-        <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="is_a_class" name="is_a_class">
-            <label class="form-check-label" for="is_a_class">A Class Property</label>
-        </div>
-        <div class="form-group">
-            <label for="property_type">Property Type:</label>
-            <select class="form-control" id="property_type" name="property_type">
-                <option value="primary">Primary Residence</option>
-                <option value="state_guarantee">State Guarantee</option>
-                <option value="rental">Rental Property</option>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary">Calculate</button>
-    </form>
-    {% if result %}
-        <h2>Results:</h2>
-        <p>Maximum Loan Amount: {{ result.max_loan }}</p>
-        <p>Maximum Monthly Payment: {{ result.max_monthly_payment }}</p>
-        <p>Maximum Loan-to-Value Ratio: {{ result.max_ltv * 100 }}%</p>
-    {% endif %}
+<section>
+    <h2>Welcome to the Credit Calculator!</h2>
+    <!-- Add your content here -->
+</section>
 {% endblock %}
