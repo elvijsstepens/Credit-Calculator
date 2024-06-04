@@ -1,11 +1,11 @@
-// Show consent form
-document.getElementById('showConsentForm').addEventListener('click', function() {
-    document.getElementById('consentForm').style.display = 'block';
+// Show cookies consent modal on page load
+$(document).ready(function() {
+    $('#cookiesConsentModal').modal('show');
 });
 
 // Accept cookies
 document.getElementById('acceptCookies').addEventListener('click', function() {
-    document.getElementById('consentForm').style.display = 'none';
+    $('#cookiesConsentModal').modal('hide');
 });
 
 document.getElementById('loanForm').addEventListener('submit', function(event) {
