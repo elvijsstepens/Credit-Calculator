@@ -52,6 +52,12 @@ select {
     border: none;
 }
 
+.btn-info {
+    background-color: #17a2b8;
+    color: #fff;
+    border: none;
+}
+
 .modal-content {
     border-radius: 5px;
 }
