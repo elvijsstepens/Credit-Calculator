@@ -5,14 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loan Calculator - Result</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="static/css/styles.css">
 </head>
 <body>
     <div class="container mt-5">
         <h1 class="text-center mb-4">Loan Calculator Result</h1>
-        <p>Available Mortgage Loan Amount: <span id="loanAmount">{{ loan_amount }}</span> EUR</p>
-        <p>Monthly Payment: <span id="monthlyPayment">{{ monthly_payment }}</span> EUR</p>
-        <a href="/" class="btn btn-primary">Back to Calculator</a>
+        <p>Available Mortgage Loan Amount: <span id="loanAmount"></span> EUR</p>
+        <p>Monthly Payment: <span id="monthlyPayment"></span> EUR</p>
+        <a href="index.html" class="btn btn-primary">Back to Calculator</a>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const loanAmount = urlParams.get('loan_amount');
+            const monthlyPayment = urlParams.get('monthly_payment');
+            document.getElementById('loanAmount').textContent = loanAmount;
+            document.getElementById('monthlyPayment').textContent = monthlyPayment;
+        });
+    </script>
 </body>
 </html>
