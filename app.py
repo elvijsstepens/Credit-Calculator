@@ -1,23 +1,42 @@
-from flask import Flask, render_template, request
+$(document).ready(function() {
+    $('#cookiesConsentModal').modal('show');
+});
 
-app = Flask(__name__)
+document.getElementById('acceptCookies').addEventListener('click', function() {
+    $('#cookiesConsentModal').modal('hide');
+});
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+document.getElementById('loanForm').addEventListener('submit', function(event) {
+    event.preventDefault();
 
-@app.route('/calculate', methods=['POST'])
-def calculate():
-    # Retrieve form data
-    net_income = float(request.form['netIncome'])
-    current_loans = float(request.form['currentLoans'])
-    # Retrieve other input data
+    var netIncome = parseFloat(document.getElementById('netIncome').value);
+    var currentLoans = parseFloat(document.getElementById('currentLoans').value);
+    var propertyType = document.getElementById('propertyType').value;
+    var energyEfficiency = document.getElementById('energyEfficiency').value;
+    var interestRate = parseFloat(document.getElementById('interestRate').value);
+    var euriborRate = parseFloat(document.getElementById('euriborRate').value);
 
-    # Perform calculations
-    # Implement loan eligibility criteria (DSTI, DTI, LTV, etc.)
+    var maxDsti = energyEfficiency === 'Aclass' ? 0.45 : 0.40;
+    var maxDti = energyEfficiency === 'Aclass' ? 8 : 6;
+    var maxLtv = propertyType === 'rental' ? 0.70 : (propertyType === 'stateSupport' ? 0.95 : 0.90);
 
-    # Pass calculated data to result.html
-    return render_template('result.html')
+    var maxLoanAmount = (netIncome * maxDti - currentLoans) / (1 + (interestRate + euriborRate) / 100);
+    var maxMonthlyPayment = netIncome * maxDsti;
 
-if __name__ == '__main__':
-    app.run(debug=True)
+    maxLoanAmount = maxLoanAmount * maxLtv;
+
+    fetch('/calculate', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            loan_amount: maxLoanAmount,
+            monthly_payment: maxMonthlyPayment
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        window.location.href = '/result?loan_amount=' + data.loan_amount + '&monthly_payment=' + data.monthly_payment;
+    });
+});
