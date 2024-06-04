@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Calculator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Loan Calculator</h1>
+        <form id="loanForm">
+            <label for="netIncome">Net Income (EUR):</label>
+            <input type="number" id="netIncome" required>
+            <label for="currentLoans">Current Loans (EUR):</label>
+            <input type="number" id="currentLoans" required>
+            <!-- Add more input fields for interest rate, property type, etc. -->
+            <button type="submit" class="btn btn-primary">Calculate</button>
+        </form>
+        <button id="showConsentForm" class="btn btn-secondary">Show Consent Form</button>
+    </div>
+    <div id="consentForm" class="cookie-consent">
+        <p>This website uses cookies. By clicking "Accept", you consent to the use of cookies.</p>
+        <button id="acceptCookies" class="btn btn-success">Accept</button>
+    </div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
