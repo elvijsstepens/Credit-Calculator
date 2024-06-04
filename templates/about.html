@@ -1,14 +1,36 @@
-{% extends 'layout.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credit Calculator - About</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Credit Calculator</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('about') }}">About</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h2>About Credit Calculator</h2>
+            <!-- Add your content here -->
+            <p>This calculator helps you determine the maximum mortgage loan amount based on your net income, existing loans, and other parameters. The calculator takes into account the DSTI and DTI ratios, as well as property class and type.</p>
+            <p>The following resources provide more information on the regulations and laws governing mortgage loans:</p>
+            <ul>
+                <li><a href="link_to_law_1" target="_blank">Law 1: Mortgage Regulations</a></li>
+                <li><a href="link_to_law_2" target="_blank">Law 2: Financial Guidelines</a></li>
+            </ul>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Credit Calculator</p>
+    </footer>
+</body>
+</html>
 
-{% block content %}
-<section>
-    <h2>About Credit Calculator</h2>
-    <!-- Add your content here -->
-    <p>This calculator helps you determine the maximum mortgage loan amount based on your net income, existing loans, and other parameters. The calculator takes into account the DSTI and DTI ratios, as well as property class and type.</p>
-    <p>The following resources provide more information on the regulations and laws governing mortgage loans:</p>
-    <ul>
-        <li><a href="link_to_law_1" target="_blank">Law 1: Mortgage Regulations</a></li>
-        <li><a href="link_to_law_2" target="_blank">Law 2: Financial Guidelines</a></li>
-    </ul>
-</section>
-{% endblock %}
