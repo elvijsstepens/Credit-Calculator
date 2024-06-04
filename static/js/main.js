@@ -28,7 +28,7 @@ $(document).ready(function() {
         var maxDti = energyEfficiency === 'Aclass' ? netIncome * 96 : netIncome * 72;
         var maxLtv = propertyType === 'rental' ? 0.70 : (propertyType === 'stateSupport' ? 0.95 : 0.90);
 
-        var maxLoanAmount = (netIncome * 12 * (energyEfficiency === 'Aclass' ? 8 : 6)) - currentLoans;
+        var maxLoanAmount = maxDti - currentLoans;
         var maxMonthlyPayment = netIncome * maxDsti - currentMonthlyPayments;
 
         var actualLoanAmount = maxLoanAmount * maxLtv;
