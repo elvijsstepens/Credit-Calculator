@@ -1,35 +1,63 @@
 $(document).ready(function() {
-    $('#cookiesConsentModal').modal('show');
-});
-
-document.getElementById('acceptCookies').addEventListener('click', function() {
-    $('#cookiesConsentModal').modal('hide');
-});
-
-document.getElementById('loanForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-
-    var netIncome = parseFloat(document.getElementById('netIncome').value);
-    var currentLoans = parseFloat(document.getElementById('currentLoans').value);
-    var currentMonthlyPayments = parseFloat(document.getElementById('currentMonthlyPayments').value);
-    var propertyType = document.getElementById('propertyType').value;
-    var energyEfficiency = document.getElementById('energyEfficiency').value;
-    var interestRate = parseFloat(document.getElementById('interestRate').value);
-    var euriborRate = parseFloat(document.getElementById('euriborRate').value);
-
-    var maxDsti = energyEfficiency === 'Aclass' ? 0.45 : 0.40;
-    var maxDti = energyEfficiency === 'Aclass' ? 8 : 6;
-    var maxLtv = propertyType === 'rental' ? 0.70 : (propertyType === 'stateSupport' ? 0.95 : 0.90);
-
-    var maxLoanAmount = (netIncome * maxDti - currentLoans) / (1 + (interestRate + euriborRate) / 100);
-    var maxMonthlyPayment = netIncome * maxDsti;
-
-    maxLoanAmount = maxLoanAmount * maxLtv;
-
-    var actualLoanAmount = maxLoanAmount;
-    if ((currentMonthlyPayments + (actualLoanAmount * ((interestRate + euriborRate) / 100) / 12)) > maxMonthlyPayment) {
-        actualLoanAmount = ((maxMonthlyPayment - currentMonthlyPayments) * 12) / ((interestRate + euriborRate) / 100);
+    if (!localStorage.getItem('cookiesAccepted')) {
+        $('#cookiesConsentModal').modal('show');
     }
 
-    window.location.href = `result.html?loan_amount=${actualLoanAmount.toFixed(2)}&monthly_payment=${maxMonthlyPayment.toFixed(2)}`;
+    $('#hasExistingLoans').on('change', function() {
+        $('#existingLoansFields').toggle(this.checked);
+    });
+
+    $('#acceptCookies').on('click', function() {
+        localStorage.setItem('cookiesAccepted', true);
+        $('#cookiesConsentModal').modal('hide');
+    });
+
+    $('#loanAmountForm').on('submit', function(event) {
+        event.preventDefault();
+
+        var netIncome = parseFloat($('#netIncome').val());
+        var hasExistingLoans = $('#hasExistingLoans').is(':checked');
+        var currentLoans = hasExistingLoans ? parseFloat($('#currentLoans').val()) : 0;
+        var currentMonthlyPayments = hasExistingLoans ? parseFloat($('#currentMonthlyPayments').val()) : 0;
+        var propertyType = $('#propertyType').val();
+        var energyEfficiency = $('#energyEfficiency').val();
+        var interestRate = 5.0; // Fixed interest rate
+        var euriborRate = 0.0; // Fixed Euribor rate
+
+        var maxDsti = energyEfficiency === 'Aclass' ? 0.45 : 0.40;
+        var maxDti = energyEfficiency === 'Aclass' ? netIncome * 96 : netIncome * 72;
+        var maxLtv = propertyType === 'rental' ? 0.70 : (propertyType === 'stateSupport' ? 0.95 : 0.90);
+
+        var maxLoanAmount = (netIncome * 12 * (energyEfficiency === 'Aclass' ? 8 : 6)) - currentLoans;
+        var maxMonthlyPayment = netIncome * maxDsti - currentMonthlyPayments;
+
+        var actualLoanAmount = maxLoanAmount * maxLtv;
+        var monthlyPayment = (actualLoanAmount * ((interestRate + euriborRate) / 100)) / 12;
+
+        if (monthlyPayment > maxMonthlyPayment) {
+            actualLoanAmount = (maxMonthlyPayment * 12) / ((interestRate + euriborRate) / 100);
+            monthlyPayment = maxMonthlyPayment;
+        }
+
+        $('#loanAmount').text(actualLoanAmount.toFixed(2));
+        $('#monthlyPayment').text(monthlyPayment.toFixed(2));
+        $('#loanAmountResult').show();
+    });
+
+    $('#monthlyPaymentForm').on('submit', function(event) {
+        event.preventDefault();
+
+        var loanAmount = parseFloat($('#loanAmountInput').val());
+        var loanTerm = parseFloat($('#loanTerm').val());
+        var interestRate = parseFloat($('#interestRateInput').val());
+        var euriborRate = parseFloat($('#euriborRateInput').val());
+
+        var monthlyInterestRate = (interestRate + euriborRate) / 100 / 12;
+        var numberOfPayments = loanTerm * 12;
+
+        var monthlyPayment = (loanAmount * monthlyInterestRate) / (1 - Math.pow(1 + monthlyInterestRate, -numberOfPayments));
+
+        $('#calculatedMonthlyPayment').text(monthlyPayment.toFixed(2));
+        $('#monthlyPaymentResult').show();
+    });
 });
