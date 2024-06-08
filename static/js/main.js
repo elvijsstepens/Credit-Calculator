@@ -16,26 +16,47 @@ $(document).ready(function() {
         event.preventDefault();
 
         var netIncome = parseFloat($('#netIncome').val());
+        var dependants = parseInt($('#dependants').val());
         var hasExistingLoans = $('#hasExistingLoans').is(':checked');
         var currentLoans = hasExistingLoans ? parseFloat($('#currentLoans').val()) : 0;
         var currentMonthlyPayments = hasExistingLoans ? parseFloat($('#currentMonthlyPayments').val()) : 0;
-        var propertyType = $('#propertyType').val();
         var energyEfficiency = $('#energyEfficiency').val();
-        var interestRate = 5.0; // Fixed interest rate
-        var euriborRate = 0.0; // Fixed Euribor rate
+        var interestRate = 1.99; // Fixed base interest rate
+        var euriborRate = 3.735; // 6 months Euribor rate as of 7 June, 2024
 
-        var maxDsti = energyEfficiency === 'Aclass' ? 0.45 : 0.40;
+        var stateMinSalary = 700;
+        var incomeRatio = netIncome / stateMinSalary;
+        var dependantsReserve = dependants * stateMinSalary * 0.30;
+
+        var maxDsti;
+        if (incomeRatio <= 0.7) {
+            maxDsti = 0.10;
+        } else if (incomeRatio > 0.7 && incomeRatio <= 1) {
+            maxDsti = 0.20;
+        } else if (incomeRatio > 1 && incomeRatio < 1.8) {
+            maxDsti = 0.30;
+        } else if (incomeRatio >= 1.8 && incomeRatio <= 2.5) {
+            maxDsti = 0.35;
+        } else if (incomeRatio > 2.5) {
+            maxDsti = energyEfficiency === 'Aclass' ? 0.45 : 0.40;
+        }
+
+        var maxMonthlyPayment = (netIncome - dependantsReserve) * maxDsti;
+        var remainingIncome = netIncome - currentMonthlyPayments - maxMonthlyPayment;
+
+        if (remainingIncome < netIncome * 0.8) {
+            maxMonthlyPayment = (netIncome * 0.8) - currentMonthlyPayments;
+        }
+
         var maxDti = energyEfficiency === 'Aclass' ? netIncome * 96 : netIncome * 72;
-        var maxLtv = propertyType === 'rental' ? 0.70 : (propertyType === 'stateSupport' ? 0.95 : 0.90);
-
         var maxLoanAmount = maxDti - currentLoans;
-        var maxMonthlyPayment = netIncome * maxDsti - currentMonthlyPayments;
 
-        var actualLoanAmount = maxLoanAmount * maxLtv;
-        var monthlyPayment = (actualLoanAmount * ((interestRate + euriborRate) / 100)) / 12;
+        var actualLoanAmount = maxLoanAmount;
+        var totalInterestRate = interestRate + euriborRate;
+        var monthlyPayment = (actualLoanAmount * (totalInterestRate / 100)) / 12;
 
         if (monthlyPayment > maxMonthlyPayment) {
-            actualLoanAmount = (maxMonthlyPayment * 12) / ((interestRate + euriborRate) / 100);
+            actualLoanAmount = (maxMonthlyPayment * 12) / (totalInterestRate / 100);
             monthlyPayment = maxMonthlyPayment;
         }
 
@@ -71,4 +92,3 @@ $(document).ready(function() {
         }
     });
 });
-
