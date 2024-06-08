@@ -15,11 +15,11 @@ $(document).ready(function() {
     $('#loanAmountForm').on('submit', function(event) {
         event.preventDefault();
 
-        var netIncome = parseFloat($('#netIncome').val());
-        var dependants = parseInt($('#dependants').val());
+        var netIncome = Math.round(parseFloat($('#netIncome').val()));
+        var dependants = Math.round(parseInt($('#dependants').val()));
         var hasExistingLoans = $('#hasExistingLoans').is(':checked');
-        var currentLoans = hasExistingLoans ? parseFloat($('#currentLoans').val()) : 0;
-        var currentMonthlyPayments = hasExistingLoans ? parseFloat($('#currentMonthlyPayments').val()) : 0;
+        var currentLoans = hasExistingLoans ? Math.round(parseFloat($('#currentLoans').val())) : 0;
+        var currentMonthlyPayments = hasExistingLoans ? Math.round(parseFloat($('#currentMonthlyPayments').val())) : 0;
         var energyEfficiency = $('#energyEfficiency').val();
         var interestRate = 1.99; // Fixed base interest rate
         var euriborRate = 3.735; // 6 months Euribor rate as of 7 June, 2024
@@ -27,16 +27,14 @@ $(document).ready(function() {
 
         var stateMinSalary = 700;
         var adjustedNetIncome = netIncome;
+        var minimumRemainingIncome = 0;
 
-        // Adjust net income for dependants
+        // Set minimum remaining income based on dependants
         if (dependants === 1) {
-            adjustedNetIncome = netIncome - (0.30 * stateMinSalary);
+            minimumRemainingIncome = 210;
         } else if (dependants > 1) {
-            adjustedNetIncome = netIncome - (0.60 * stateMinSalary);
+            minimumRemainingIncome = 420;
         }
-
-        // Ensure adjustedNetIncome is non-negative
-        adjustedNetIncome = Math.max(adjustedNetIncome, 0);
 
         var incomeRatio = adjustedNetIncome / stateMinSalary;
 
@@ -54,28 +52,25 @@ $(document).ready(function() {
             maxDsti = energyEfficiency === 'Aclass' ? 0.45 : 0.40;
         }
 
-        var maxMonthlyPayment = adjustedNetIncome * maxDsti;
+        var maxMonthlyPayment = Math.round(adjustedNetIncome * maxDsti);
 
-        // Ensure the borrower has at least 80% of 700 EUR left after loan payments
-        if ((incomeRatio > 1 && incomeRatio < 1.8) || (incomeRatio >= 1.8 && incomeRatio <= 2.5)) {
-            var minimumRemainingIncome = 0.80 * stateMinSalary;
-            var remainingIncome = adjustedNetIncome - currentMonthlyPayments - maxMonthlyPayment;
-            if (remainingIncome < minimumRemainingIncome) {
-                maxMonthlyPayment = adjustedNetIncome - currentMonthlyPayments - minimumRemainingIncome;
-            }
+        // Ensure the borrower has at least 210/420 EUR left after loan payments
+        var remainingIncome = adjustedNetIncome - currentMonthlyPayments - maxMonthlyPayment;
+        if (remainingIncome < minimumRemainingIncome) {
+            maxMonthlyPayment = adjustedNetIncome - currentMonthlyPayments - minimumRemainingIncome;
         }
 
         // Ensure maxMonthlyPayment is non-negative
         maxMonthlyPayment = Math.max(maxMonthlyPayment, 0);
 
         // Calculate the maximum loan amount considering the DSTI limit
-        var maxLoanAmountByDst = maxMonthlyPayment / (totalInterestRate / 100 / 12);
+        var maxLoanAmountByDst = Math.round(maxMonthlyPayment / (totalInterestRate / 100 / 12));
 
         // Ensure maxLoanAmountByDst is non-negative
         maxLoanAmountByDst = Math.max(maxLoanAmountByDst, 0);
 
         // Calculate the DTI limit
-        var maxDti = energyEfficiency === 'Aclass' ? netIncome * 96 : netIncome * 72;
+        var maxDti = energyEfficiency === 'Aclass' ? Math.round(netIncome * 96) : Math.round(netIncome * 72);
 
         // Calculate the final maximum loan amount considering both DSTI and DTI
         var maxLoanAmount = Math.min(maxLoanAmountByDst, maxDti - currentLoans);
@@ -84,14 +79,14 @@ $(document).ready(function() {
         maxLoanAmount = Math.max(maxLoanAmount, 0);
 
         var actualLoanAmount = maxLoanAmount;
-        var monthlyPayment = (actualLoanAmount * (totalInterestRate / 100)) / 12;
+        var monthlyPayment = Math.round((actualLoanAmount * (totalInterestRate / 100)) / 12);
 
         if (monthlyPayment <= 0 || actualLoanAmount <= 0) {
             alert("Check information provided");
             return false;
         } else {
-            $('#loanAmount').text(actualLoanAmount.toFixed(2));
-            $('#monthlyPayment').text(monthlyPayment.toFixed(2));
+            $('#loanAmount').text(actualLoanAmount);
+            $('#monthlyPayment').text(monthlyPayment);
             $('#loanAmountResult').show();
         }
     });
