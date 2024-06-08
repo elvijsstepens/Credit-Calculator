@@ -7,6 +7,19 @@ body {
     padding: 0;
 }
 
+.navbar {
+    background-color: #ff7f50; /* Orange color */
+}
+
+.nav-link {
+    color: #fff !important;
+}
+
+.nav-link.active {
+    background-color: #ff4500 !important; /* Darker orange */
+    border-radius: 5px;
+}
+
 .container {
     max-width: 900px;
     margin: 50px auto;
@@ -17,7 +30,7 @@ body {
 }
 
 h1, h3, h4 {
-    color: #007bff;
+    color: #ff7f50; /* Orange color */
     font-family: 'Montserrat', sans-serif;
 }
 
@@ -39,7 +52,7 @@ a.btn-info:hover {
 }
 
 a.btn-primary, .btn-primary {
-    background-color: #007bff;
+    background-color: #ff4500; /* Darker orange */
     border: none;
     color: #fff;
     padding: 10px 20px;
@@ -48,7 +61,7 @@ a.btn-primary, .btn-primary {
 }
 
 a.btn-primary:hover, .btn-primary:hover {
-    background-color: #0056b3;
+    background-color: #c74300; /* Darker shade of orange */
 }
 
 a.btn-secondary, .btn-secondary {
@@ -82,7 +95,7 @@ a.btn-success:hover, .btn-success:hover {
 }
 
 thead th {
-    background-color: #007bff;
+    background-color: #ff7f50; /* Orange color */
     color: #fff;
 }
 
@@ -112,5 +125,5 @@ footer {
 }
 
 body {
-    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+    background: linear-gradient(135deg, #fff5e6, #ffebcc);
 }
