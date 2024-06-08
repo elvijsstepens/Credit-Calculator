@@ -10,81 +10,46 @@
 <body>
     <div class="container mt-5">
         <h1 class="text-center mb-4">Loan Calculator</h1>
-        <ul class="nav nav-tabs" id="calculatorTabs" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" id="loan-amount-tab" data-toggle="tab" href="#loan-amount" role="tab" aria-controls="loan-amount" aria-selected="true">Calculate Loan Amount</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="monthly-payment-tab" data-toggle="tab" href="#monthly-payment" role="tab" aria-controls="monthly-payment" aria-selected="false">Calculate Monthly Payment</a>
-            </li>
-        </ul>
-        <div class="tab-content" id="calculatorTabsContent">
-            <div class="tab-pane fade show active" id="loan-amount" role="tabpanel" aria-labelledby="loan-amount-tab">
-                <form id="loanAmountForm">
-                    <div class="form-group">
-                        <label for="netIncome">Net Income (EUR):</label>
-                        <input type="number" class="form-control" id="netIncome" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="dependants">Number of Dependants:</label>
-                        <input type="number" class="form-control" id="dependants" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="hasExistingLoans">I have existing loan obligations: <input type="checkbox" id="hasExistingLoans"></label>
-                    </div>
-                    <div id="existingLoansFields" style="display:none;">
-                        <div class="form-group">
-                            <label for="currentLoans">Current Loans (EUR):</label>
-                            <input type="number" class="form-control" id="currentLoans">
-                        </div>
-                        <div class="form-group">
-                            <label for="currentMonthlyPayments">Current Monthly Payments (EUR):</label>
-                            <input type="number" class="form-control" id="currentMonthlyPayments">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="energyEfficiency">Energoefficient Housing:</label>
-                        <select class="form-control" id="energyEfficiency" required>
-                            <option value="regular">Regular</option>
-                            <option value="Aclass">A Class</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Calculate</button>
-                </form>
-                <div id="loanAmountResult" style="display:none;" class="mt-4">
-                    <h3>Loan Amount Result</h3>
-                    <p>Available Mortgage Loan Amount: <span id="loanAmount"></span> EUR</p>
-                    <p>Monthly Payment: <span id="monthlyPayment"></span> EUR</p>
+        <div id="loan-amount">
+            <form id="loanAmountForm">
+                <div class="form-group">
+                    <label for="netIncome">Net Income (EUR):</label>
+                    <input type="number" class="form-control" id="netIncome" required>
                 </div>
-                <p class="small mt-3">
-                    The calculation of mortgage payments is informative and may change after completion of the application to the creditor and submission of all necessary data. For limit calculations, an interest rate of 1.99% + 6 months Euribor (+3.735% as on 7 June, 2024) is used. See the current EURIBOR rates <a href="https://www.euribor-rates.eu/en/current-euribor-rates/" target="_blank">here</a>.
-                </p>
-            </div>
-            <div class="tab-pane fade" id="monthly-payment" role="tabpanel" aria-labelledby="monthly-payment-tab">
-                <form id="monthlyPaymentForm">
-                    <div class="form-group">
-                        <label for="loanAmountInput">Loan Amount (EUR):</label>
-                        <input type="number" class="form-control" id="loanAmountInput" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="loanTerm">Loan Term (years):</label>
-                        <input type="number" class="form-control" id="loanTerm" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="interestRateInput">Interest Rate (%):</label>
-                        <input type="number" step="0.001" class="form-control" id="interestRateInput" value="1.99" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="euriborRateInput">Euribor Rate (%):</label>
-                        <input type="number" step="0.001" class="form-control" id="euriborRateInput" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Calculate</button>
-                </form>
-                <div id="monthlyPaymentResult" style="display:none;" class="mt-4">
-                    <h3>Monthly Payment Result</h3>
-                    <p>Monthly Payment: <span id="calculatedMonthlyPayment"></span> EUR</p>
+                <div class="form-group">
+                    <label for="dependants">Number of Dependants:</label>
+                    <input type="number" class="form-control" id="dependants" required>
                 </div>
+                <div class="form-group">
+                    <label for="hasExistingLoans">I have existing loan obligations: <input type="checkbox" id="hasExistingLoans"></label>
+                </div>
+                <div id="existingLoansFields" style="display:none;">
+                    <div class="form-group">
+                        <label for="currentLoans">Current Loans (EUR):</label>
+                        <input type="number" class="form-control" id="currentLoans">
+                    </div>
+                    <div class="form-group">
+                        <label for="currentMonthlyPayments">Current Monthly Payments (EUR):</label>
+                        <input type="number" class="form-control" id="currentMonthlyPayments">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="energyEfficiency">Energoefficient Housing:</label>
+                    <select class="form-control" id="energyEfficiency" required>
+                        <option value="regular">Regular</option>
+                        <option value="Aclass">A Class</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Calculate</button>
+            </form>
+            <div id="loanAmountResult" style="display:none;" class="mt-4">
+                <h3>Loan Amount Result</h3>
+                <p>Available Mortgage Loan Amount: <span id="loanAmount"></span> EUR</p>
+                <p>Monthly Payment: <span id="monthlyPayment"></span> EUR</p>
             </div>
+            <p class="small mt-3">
+                The calculation of mortgage payments is informative and may change after completion of the application to the creditor and submission of all necessary data. For limit calculations, an interest rate of 1.99% + 6 months Euribor (+3.735% as on 7 June, 2024) is used. See the current Euribor rates <a href="https://www.euribor-rates.eu/en/current-euribor-rates/" target="_blank">here</a>.
+            </p>
         </div>
     </div>
 
