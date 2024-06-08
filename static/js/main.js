@@ -26,20 +26,19 @@ $(document).ready(function() {
         var totalInterestRate = interestRate + euriborRate;
 
         var stateMinSalary = 700;
-        var incomeRatio = netIncome / stateMinSalary;
+        var adjustedNetIncome = netIncome;
 
-        // Calculate dependants reserve
-        var dependantsReserve;
+        // Adjust net income for dependants
         if (dependants === 1) {
-            dependantsReserve = 0.30 * stateMinSalary;
+            adjustedNetIncome = netIncome - (0.30 * stateMinSalary);
         } else if (dependants > 1) {
-            dependantsReserve = 2 * 0.30 * stateMinSalary;
-        } else {
-            dependantsReserve = 0;
+            adjustedNetIncome = netIncome - (0.60 * stateMinSalary);
         }
 
-        // Ensure dependantsReserve is non-negative
-        dependantsReserve = Math.max(dependantsReserve, 0);
+        // Ensure adjustedNetIncome is non-negative
+        adjustedNetIncome = Math.max(adjustedNetIncome, 0);
+
+        var incomeRatio = adjustedNetIncome / stateMinSalary;
 
         // Calculate the maximum DSTI
         var maxDsti;
@@ -55,17 +54,14 @@ $(document).ready(function() {
             maxDsti = energyEfficiency === 'Aclass' ? 0.45 : 0.40;
         }
 
-        // Adjust net income for dependants
-        var adjustedNetIncome = Math.max(netIncome - dependantsReserve, 0);
-
         var maxMonthlyPayment = adjustedNetIncome * maxDsti;
-        var maxDti = energyEfficiency === 'Aclass' ? netIncome * 96 : netIncome * 72;
 
-        // Ensure the borrower has at least 80% of net income left after loan payments
+        // Ensure the borrower has at least 80% of 700 EUR left after loan payments
         if ((incomeRatio > 1 && incomeRatio < 1.8) || (incomeRatio >= 1.8 && incomeRatio <= 2.5)) {
-            var remainingIncome = netIncome - currentMonthlyPayments - maxMonthlyPayment;
-            if (remainingIncome < netIncome * 0.8) {
-                maxMonthlyPayment = (netIncome * 0.8) - currentMonthlyPayments;
+            var minimumRemainingIncome = 0.80 * stateMinSalary;
+            var remainingIncome = adjustedNetIncome - currentMonthlyPayments - maxMonthlyPayment;
+            if (remainingIncome < minimumRemainingIncome) {
+                maxMonthlyPayment = adjustedNetIncome - currentMonthlyPayments - minimumRemainingIncome;
             }
         }
 
@@ -73,10 +69,13 @@ $(document).ready(function() {
         maxMonthlyPayment = Math.max(maxMonthlyPayment, 0);
 
         // Calculate the maximum loan amount considering the DSTI limit
-        var maxLoanAmountByDst = (maxMonthlyPayment + currentMonthlyPayments) / (totalInterestRate / 100 / 12);
+        var maxLoanAmountByDst = maxMonthlyPayment / (totalInterestRate / 100 / 12);
 
         // Ensure maxLoanAmountByDst is non-negative
         maxLoanAmountByDst = Math.max(maxLoanAmountByDst, 0);
+
+        // Calculate the DTI limit
+        var maxDti = energyEfficiency === 'Aclass' ? netIncome * 96 : netIncome * 72;
 
         // Calculate the final maximum loan amount considering both DSTI and DTI
         var maxLoanAmount = Math.min(maxLoanAmountByDst, maxDti - currentLoans);
