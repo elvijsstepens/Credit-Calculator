@@ -27,8 +27,21 @@ $(document).ready(function() {
 
         var stateMinSalary = 700;
         var incomeRatio = netIncome / stateMinSalary;
-        var dependantsReserve = dependants * stateMinSalary * 0.30;
 
+        // Calculate dependants reserve
+        var dependantsReserve;
+        if (dependants === 1) {
+            dependantsReserve = 0.30 * netIncome;
+        } else if (dependants > 1) {
+            dependantsReserve = 2 * 0.30 * netIncome;
+        } else {
+            dependantsReserve = 0;
+        }
+
+        // Ensure dependantsReserve is non-negative
+        dependantsReserve = Math.max(dependantsReserve, 0);
+
+        // Calculate the maximum DSTI
         var maxDsti;
         if (incomeRatio <= 0.7) {
             maxDsti = 0.10;
@@ -42,21 +55,31 @@ $(document).ready(function() {
             maxDsti = energyEfficiency === 'Aclass' ? 0.45 : 0.40;
         }
 
-        var maxMonthlyPayment = (netIncome - dependantsReserve) * maxDsti;
-        var maxDti = energyEfficiency === 'Aclass' ? netIncome * 96 : netIncome * 72;
+        // Ensure the adjusted net income is positive
+        var adjustedNetIncome = Math.max(netIncome - dependantsReserve, 0);
+
+        var maxMonthlyPayment = adjustedNetIncome * maxDsti;
+        var maxDti = energyEfficiency === 'Aclass' ? adjustedNetIncome * 96 : adjustedNetIncome * 72;
 
         // Calculate the maximum loan amount considering the DSTI limit
         var maxLoanAmountByDst = (maxMonthlyPayment + currentMonthlyPayments) / (totalInterestRate / 100 / 12);
 
         // Ensure the borrower has at least 80% of net income left after loan payments
-        var remainingIncome = netIncome - currentMonthlyPayments - maxMonthlyPayment;
-        if (remainingIncome < netIncome * 0.8) {
-            maxMonthlyPayment = (netIncome * 0.8) - currentMonthlyPayments;
+        var remainingIncome = adjustedNetIncome - currentMonthlyPayments - maxMonthlyPayment;
+        if (remainingIncome < adjustedNetIncome * 0.8) {
+            maxMonthlyPayment = (adjustedNetIncome * 0.8) - currentMonthlyPayments;
             maxLoanAmountByDst = (maxMonthlyPayment + currentMonthlyPayments) / (totalInterestRate / 100 / 12);
         }
 
+        // Ensure all values are positive
+        maxMonthlyPayment = Math.max(maxMonthlyPayment, 0);
+        maxLoanAmountByDst = Math.max(maxLoanAmountByDst, 0);
+
         // Calculate the final maximum loan amount considering both DSTI and DTI
         var maxLoanAmount = Math.min(maxLoanAmountByDst, maxDti - currentLoans);
+
+        // Ensure all values are positive
+        maxLoanAmount = Math.max(maxLoanAmount, 0);
 
         var actualLoanAmount = maxLoanAmount;
         var monthlyPayment = (actualLoanAmount * (totalInterestRate / 100)) / 12;
