@@ -26,7 +26,6 @@ $(document).ready(function() {
         var totalInterestRate = interestRate + euriborRate;
 
         var stateMinSalary = 700;
-        var adjustedNetIncome = netIncome;
         var minimumRemainingIncome = 0;
 
         // Set minimum remaining income based on dependants
@@ -36,7 +35,7 @@ $(document).ready(function() {
             minimumRemainingIncome = 420;
         }
 
-        var incomeRatio = adjustedNetIncome / stateMinSalary;
+        var incomeRatio = netIncome / stateMinSalary;
 
         // Calculate the maximum DSTI
         var maxDsti;
@@ -52,12 +51,12 @@ $(document).ready(function() {
             maxDsti = energyEfficiency === 'Aclass' ? 0.45 : 0.40;
         }
 
-        var maxMonthlyPayment = Math.round(adjustedNetIncome * maxDsti);
+        var maxMonthlyPayment = Math.round(netIncome * maxDsti);
 
         // Ensure the borrower has at least 210/420 EUR left after loan payments
-        var remainingIncome = adjustedNetIncome - currentMonthlyPayments - maxMonthlyPayment;
+        var remainingIncome = netIncome - currentMonthlyPayments - maxMonthlyPayment;
         if (remainingIncome < minimumRemainingIncome) {
-            maxMonthlyPayment = adjustedNetIncome - currentMonthlyPayments - minimumRemainingIncome;
+            maxMonthlyPayment = netIncome - currentMonthlyPayments - minimumRemainingIncome;
         }
 
         // Ensure maxMonthlyPayment is non-negative
