@@ -39,9 +39,14 @@ $(document).ready(function() {
             monthlyPayment = maxMonthlyPayment;
         }
 
-        $('#loanAmount').text(actualLoanAmount.toFixed(2));
-        $('#monthlyPayment').text(monthlyPayment.toFixed(2));
-        $('#loanAmountResult').show();
+        if (monthlyPayment <= 0 || actualLoanAmount <= 0) {
+            alert("Check information provided");
+            return false;
+        } else {
+            $('#loanAmount').text(actualLoanAmount.toFixed(2));
+            $('#monthlyPayment').text(monthlyPayment.toFixed(2));
+            $('#loanAmountResult').show();
+        }
     });
 
     $('#monthlyPaymentForm').on('submit', function(event) {
@@ -57,7 +62,13 @@ $(document).ready(function() {
 
         var monthlyPayment = (loanAmount * monthlyInterestRate) / (1 - Math.pow(1 + monthlyInterestRate, -numberOfPayments));
 
-        $('#calculatedMonthlyPayment').text(monthlyPayment.toFixed(2));
-        $('#monthlyPaymentResult').show();
+        if (monthlyPayment <= 0) {
+            alert("Check information provided");
+            return false;
+        } else {
+            $('#calculatedMonthlyPayment').text(monthlyPayment.toFixed(2));
+            $('#monthlyPaymentResult').show();
+        }
     });
 });
+
