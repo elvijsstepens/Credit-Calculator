@@ -23,6 +23,7 @@ $(document).ready(function() {
         var energyEfficiency = $('#energyEfficiency').val();
         var interestRate = 1.99; // Fixed base interest rate
         var euriborRate = 3.735; // 6 months Euribor rate as of 7 June, 2024
+        var totalInterestRate = interestRate + euriborRate;
 
         var stateMinSalary = 700;
         var incomeRatio = netIncome / stateMinSalary;
@@ -42,23 +43,23 @@ $(document).ready(function() {
         }
 
         var maxMonthlyPayment = (netIncome - dependantsReserve) * maxDsti;
-        var remainingIncome = netIncome - currentMonthlyPayments - maxMonthlyPayment;
+        var maxDti = energyEfficiency === 'Aclass' ? netIncome * 96 : netIncome * 72;
 
+        // Calculate the maximum loan amount considering the DSTI limit
+        var maxLoanAmountByDst = (maxMonthlyPayment + currentMonthlyPayments) / (totalInterestRate / 100 / 12);
+
+        // Ensure the borrower has at least 80% of net income left after loan payments
+        var remainingIncome = netIncome - currentMonthlyPayments - maxMonthlyPayment;
         if (remainingIncome < netIncome * 0.8) {
             maxMonthlyPayment = (netIncome * 0.8) - currentMonthlyPayments;
+            maxLoanAmountByDst = (maxMonthlyPayment + currentMonthlyPayments) / (totalInterestRate / 100 / 12);
         }
 
-        var maxDti = energyEfficiency === 'Aclass' ? netIncome * 96 : netIncome * 72;
-        var maxLoanAmount = maxDti - currentLoans;
+        // Calculate the final maximum loan amount considering both DSTI and DTI
+        var maxLoanAmount = Math.min(maxLoanAmountByDst, maxDti - currentLoans);
 
         var actualLoanAmount = maxLoanAmount;
-        var totalInterestRate = interestRate + euriborRate;
         var monthlyPayment = (actualLoanAmount * (totalInterestRate / 100)) / 12;
-
-        if (monthlyPayment > maxMonthlyPayment) {
-            actualLoanAmount = (maxMonthlyPayment * 12) / (totalInterestRate / 100);
-            monthlyPayment = maxMonthlyPayment;
-        }
 
         if (monthlyPayment <= 0 || actualLoanAmount <= 0) {
             alert("Check information provided");
