@@ -10,6 +10,7 @@ body {
 .navbar {
     background-color: #ffffff; /* White background */
     border-bottom: 2px solid #ff7f50; /* Orange border bottom */
+    justify-content: center; /* Center the navigation bar */
 }
 
 .navbar-brand {
@@ -21,6 +22,7 @@ body {
     padding: 10px 20px;
     font-weight: bold;
     position: relative;
+    transition: color 0.3s ease;
 }
 
 .nav-link:hover {
@@ -38,6 +40,14 @@ body {
     width: 50%;
     padding-top: 5px; /* Space between text and underline */
     border-bottom: 3px solid #ff7f50; /* Orange underline */
+}
+
+.navbar-toggler {
+    border-color: #ff7f50; /* Orange color for the toggler */
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'><path stroke='rgba(255, 127, 80, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/></svg>");
 }
 
 .container {
@@ -134,8 +144,9 @@ thead th {
     border: none;
 }
 
-.btn {
-    cursor: pointer;
+.btn, .btn:focus, .btn:active {
+    outline: none;
+    box-shadow: none;
 }
 
 footer {
@@ -146,4 +157,14 @@ footer {
 
 body {
     background: linear-gradient(135deg, #fff5e6, #ffebcc);
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
 }

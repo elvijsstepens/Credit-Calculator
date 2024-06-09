@@ -10,17 +10,19 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg">
-        <a class="navbar-brand" href="index.html">LoanCalc</a>
+        <a class="navbar-brand" href="index.html">
+            <img src="https://img.icons8.com/ios-filled/50/ff7f50/home.png" alt="Home" width="30" height="30">
+        </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
+        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+            <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link active" href="index.html">Calculator</a>
+                    <a class="nav-link active" href="index.html">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="info.html">Info</a>
+                    <a class="nav-link" href="info.html">Information</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="about.html">About</a>
@@ -35,11 +37,11 @@
             <form id="loanAmountForm">
                 <div class="form-group">
                     <label for="netIncome">Net Income (EUR):</label>
-                    <input type="number" class="form-control" id="netIncome" required>
+                    <input type="number" class="form-control" id="netIncome" min="0" required>
                 </div>
                 <div class="form-group">
                     <label for="dependants">Number of Dependants:</label>
-                    <input type="number" class="form-control" id="dependants" required>
+                    <input type="number" class="form-control" id="dependants" min="0" required>
                 </div>
                 <div class="form-group">
                     <label for="hasExistingLoans">I have existing loan obligations: <input type="checkbox" id="hasExistingLoans"></label>
@@ -47,11 +49,11 @@
                 <div id="existingLoansFields" style="display:none;">
                     <div class="form-group">
                         <label for="currentLoans">Current Loans (EUR):</label>
-                        <input type="number" class="form-control" id="currentLoans">
+                        <input type="number" class="form-control" id="currentLoans" min="0">
                     </div>
                     <div class="form-group">
                         <label for="currentMonthlyPayments">Current Monthly Payments (EUR):</label>
-                        <input type="number" class="form-control" id="currentMonthlyPayments">
+                        <input type="number" class="form-control" id="currentMonthlyPayments" min="0">
                     </div>
                 </div>
                 <div class="form-group">
@@ -69,7 +71,7 @@
                 <p>Monthly Payment: <span id="monthlyPayment"></span> EUR</p>
             </div>
             <p class="small mt-3">
-                NOTE: The calculation of mortgage payments is informative and may change after completion of the application to the creditor and submission of all necessary data. For limit calculations, an interest rate of 1.99% + 6 months Euribor (+3.735% as on 7 June, 2024) is used. See the current EURIBOR rates <a href="https://www.euribor-rates.eu/en/current-euribor-rates/" target="_blank">here</a>.
+                The calculation of mortgage payments is informative and may change after completion of the application to the creditor and submission of all necessary data. For limit calculations, an interest rate of 1.99% + 6 months Euribor (+3.735% as on 7 June, 2024) is used. See the current EURIBOR rates <a href="https://www.euribor-rates.eu/en/current-euribor-rates/" target="_blank">here</a>.
             </p>
         </div>
     </div>
